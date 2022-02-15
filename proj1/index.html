@@ -39,10 +39,10 @@
 
 
 <body>
-<h1 id="project-1-rasterizer">Project 1: Rasterizer</h1>
+<h1 id="project-1-rasterizer" style="text-align: center; width: 90%">Project 1: Rasterizer</h1>
 <blockquote>
-<p>CS 184: Spring 2022</p>
-<p>Sam Ellgass and Nima Rezaeian</p>
+<p style="text-align: center">CS 184: Spring 2022</p>
+<p style="text-align: center">Sam Ellgass and Nima Rezaeian</p>
 </blockquote>
 <h1 id="overview">Overview</h1>
 <p>In <em>Project 1: Rasterizer</em>, we implemented the entire rasterization pipeline for SVG files with a number of customizations to 
@@ -133,21 +133,19 @@ of minification of a texture. P_ZERO offers no antialiasing, but is immediate, r
 <p>Below is a PNG of a Landscape taken in New York City (credit Lukas Kloeppel) rendered as a texture. For this image, it&#39;s clear that using mipmap levels
 is important - both with the transformation of the polygon and with the incredibly high resolution (and high frequency) of the buildings in the distance.
 Thus, when we use a level sampling method of L_NEAREST, the fidelity of the image improves greatly. Interestingly, I personally like P_NEAREST as a pixel sampling method 
-in this case over P_LINEAR, as I think it&#39;s important to have some image quality in the distance.</p>
+in this case over P_LINEAR, as we think it&#39;s important to have some image quality in the distance.</p>
 <div>
   <img src="images/task6lzero_pnearest.png" height="400" width="532"/>
   <img src="images/task6lzero_plinear.png" height="400" width="532"/>
   <img src="images/task6lnearest_pnearest.png" height="400" width="532"/>
   <img src="images/task6lnearest_plinear.png" height="400" width="532"/>
 </div>
-<h2 id="extra-credit-procedurally-generated-art">Extra Credit - Procedurally Generated Art</h2>
-<p><strong>PUT AND EXPLAIN PROCEDURAL ART HERE</strong></p>
 <h2 id="retrospective-and-thoughts">Retrospective and Thoughts</h2>
-<p>I thoroughly enjoyed this project. Getting to understand the tradeoffs between different antialising techniques by actually implementing and 
+<p>We thoroughly enjoyed this project. Getting to understand the tradeoffs between different antialising techniques by actually implementing and 
 understanding their performance (on my CPU) was very informative. The freedom that transforms and texture mappings offer was my favorite part of this 
-project, and something I want to explore more in the future. </p>
+project, and something we want to explore more in the future. </p>
 <p>Most of our major challenges stemmed from misunderstandings with how best to handle a very large volume of cases consistently (edge cases for triangles, 
-winding order, precision errors due to poorly constructed loops), and thus I can confidently say that I have a better understanding of how to handle enormous,
+winding order, precision errors due to poorly constructed loops), and thus we can confidently say that we have a better understanding of how to handle enormous,
 precise data stuctures after this project.</p>
 <p><a href="https://cs184.eecs.berkeley.edu/sp22/docs/proj1-spec">Project Specs</a></p>
 </body>
