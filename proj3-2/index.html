@@ -1,7 +1,177 @@
-<html>
-	<head>
-	</head>
-	<body>
-		Project 3-2 here
-	</body>
-</html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+  body {
+    padding: 100px;
+    width: 85%;
+    margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-top: 0%;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  strong {
+      font-weight: 400;
+  }
+  div {
+    text-align: center;
+  }
+  div img{ display: inline}
+
+  body p {
+    width: 95%;
+  }
+  button {
+    color: skyblue;
+    padding: 10px 25px;
+    font-size: 20px;
+    background: transparent;
+    border: 1px solid #000;
+    border-radius: 20px;
+    outline: none;
+    cursor: pointer;
+    margin: auto;
+}
+
+</style>
+<link rel="icon" type="image/x-icon" href="res/favicon.ico"/>
+<title>CS 184 Project 3-2: PathTracer 2</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+</head>
+
+
+
+
+<body>
+<button><a href="https://cal-cs184-student.github.io/sp22-project-webpages-nimarez/">Back</a></button>
+<h1 id="project-1-rasterizer" style="text-align: center; width: 95%">Project 3-2: PathTracer 2</h1>
+<blockquote>
+<p style="text-align: center">CS 184: Spring 2022</p>
+<p style="text-align: center">Sam Ellgass and Nima Rezaeian</p>
+</blockquote>
+<h1 id="overview">Overview</h1>
+<p>In this project, we expanded on our work from 3-1, and chose to implement parts 1 and 2. These parts 
+	led us to better understand how reflection differs from a scattering (BSDF), and how to use more 
+	advanced BSDFs to create glossy and metallic effects to mimic real world elements.
+</p>
+<h2 id="task-1-triangle-rasterization">Part 1 - Mirror and Glass Material</h2>
+<p>In this task, we extended our ray-tracing to accurately depict mirroring and glass materials. 
+	Below, CBspheres is rendered with 0, 1, 2, 3, 4, 5, and 100 as the maximum number of bounces per ray.
+	</p>
+	<p>
+	In the 0 bounce image, only direct light hits the camera, and only the light source is visible. 
+</p>
+<p>
+	In the 1 bounce image,
+	light that bounces directly off of the objects and hits the camera appears - and this includes the direct reflection
+	of the light in the left sphere. 
+</p>
+<p>
+	At 2 bounces, now some of the light has reflected off of the sphere and the walls to
+	hit the camera, and the left sphere can be seen to appear glassy. 
+</p>
+<p>
+	At 3 bounces, light is able to bounce off of the 
+	scene, off of an object, and then finally off of the right sphere to make the right-most sphere appear glassy.
+</p>
+<p>
+	
+	For 4 bounces, the scene gets lighter, and the only new effects are the light illuminating the right wall
+	as a result of reflection directly from above through the right sphere, and the reflection of the right sphere 
+	being visibly glassy in the left sphere. 
+</p>
+<p>
+	For 5 bounces and 100 (and all values
+	in between) the scene simply gets the benefit of more global illumination, and appears lighter.
+	</p>
+
+	<div>
+		<img src="images/task1depth0.png" height="300" width="400"/>
+		<img src="images/task1depth1.png" height="300" width="400"/>
+		<img src="images/task1depth2.png" height="300" width="400"/>
+	  </div>
+
+	  <div>
+		<img src="images/task1depth3.png" height="300" width="400"/>
+		<img src="images/task1depth4.png" height="300" width="400"/>
+		<img src="images/task1depth5.png" height="300" width="400"/>
+	  </div>
+
+	  <div>
+		<img src="images/task1depth100.png" height="300" width="400"/>
+	  </div>
+
+<h2 id="task-2-supersampling-algorithm">Part 2</h2>
+<p>In this task, we implemented more advanced BSDFs to emulate metallic and 
+	glossy surfaces. Below, we rendered the CBDragon as if it were made of gold, with alpha values of 
+	0.005, 0.05, 0.25, and 0.5. 
+	 </p>
+	 	Alpha of 0.005 is rather dark, with some shine to the directly illuminated parts, 
+		 but otherwise a generally glossy look.
+	 <p>
+		Alpha of 0.05 adds a lot more brightness to the directly illuminated parts, and retains 
+		the glossy look from 0.005.
+	 </p>
+	 <p>
+		 Alpha of 0.25 is very bright, probably more so than would be realistic, but still 
+		 retains enough glossiness as to appear metallic.
+	 </p>
+
+	 <p> 
+		 Alpha of 0.5 is almost matte in how uniform and smooth it is, and no longer looks like gold,
+		 instead like a not very glossy gold paint.
+	 </p>
+
+	 <div>
+		<img src="images/task2alphapoint005.png" height="450" width="600"/>
+		<img src="images/task2alphapoint05.png" height="450" width="600"/>
+	  </div>
+	  
+	  <div>
+		  <img src="images/task2alphapoint25.png" height="450" width="600"/>
+		  <img src="images/task2alphapoint5.png" height="450" width="600"/>
+		</div>
+
+	<p>
+		Below, CBbunny is rendered with hemisphere sampling and importance sampling.
+		The hemisphere sampled bunny is obviously much noisier - and this is due largely 
+		to the fact that hemisphere sampling works poorly with the Beckmann function, 
+		and is accentuated by the fact that microfacet bsdf's require continuity to appear glossy. 
+		In contrast, the importance sampling, adjusted for microfacet bsdf's, is able to create this natural, 
+		glossy effect.
+	</p>
+
+	<div>
+		<img src="images/task2bunnyhemis.png" height="450" width="600"/>
+		<img src="images/task2bunnylight.png" height="450" width="600"/>
+	  </div>
+
+	<p>
+		Below, we rendered the CBDragon as if it were made of both iron and sodium by changing
+		the index of refraction through eta and k parameters at specific key wavelengths. On the right,
+		our sodium dragon can be seen, reflecting light differently.
+	</p>
+
+	<div>
+		<img src="images/task2dragoniron.png" height="450" width="600"/>
+		<img src="images/task2dragonsodium.png" height="450" width="600"/>
+	  </div>
+
+
+<h2 id="retrospective-and-thoughts">Retrospective and Takeaways</h2>
+<p>This project was a good extension of the techniques of 3-1 and led to a deeper understanding 
+	of BSDF's and microfacet properties.
+</p>
+
+<p><a href="https://cs184.eecs.berkeley.edu/sp22/docs/proj2-spec">Project Specs</a></p>
+<p><em>Hosted at https://cal-cs184-student.github.io/sp22-project-webpages-nimarez/proj3-1/index</em></p>
+</body>
