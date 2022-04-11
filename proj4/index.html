@@ -1,7 +1,273 @@
-<html>
-	<head>
-	</head>
-	<body>
-		Project 4 here
-	</body>
-</html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+  body {
+    padding: 100px;
+    width: 85%;
+    margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-top: 0%;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  strong {
+      font-weight: 400;
+  }
+  div {
+    text-align: center;
+  }
+  div img{ display: inline}
+
+  body p {
+    width: 95%;
+  }
+  button {
+    color: skyblue;
+    padding: 10px 25px;
+    font-size: 20px;
+    background: transparent;
+    border: 1px solid #000;
+    border-radius: 20px;
+    outline: none;
+    cursor: pointer;
+    margin: auto;
+}
+
+</style>
+<link rel="icon" type="image/x-icon" href="res/favicon.ico"/>
+<title>CS 184 Project 4: ClothSim</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+</head>
+
+
+
+
+<body>
+<button><a href="https://cal-cs184-student.github.io/sp22-project-webpages-nimarez/">Back</a></button>
+<h1 id="project-1-rasterizer" style="text-align: center; width: 95%">Project 4: ClothSim</h1>
+<blockquote>
+<p style="text-align: center">CS 184: Spring 2022</p>
+<p style="text-align: center">Sam Ellgass and Nima Rezaeian</p>
+</blockquote>
+<h1 id="overview">Overview</h1>
+<p>In ClothSim, we used spring equations and the Verlet integration equation to model cloth 
+	as a network of springs in order to simulate movement, collision, and a variety of shading techniques.</p>
+<h2 id="task-1-triangle-rasterization">Part 1 - Masses and Springs</h2>
+<p>In this task, we implemented the "cloth" as a network of structural, shearing, and bending springs. 
+	Below, our cloth can be seen with falling from above with two corners pinned in place. The left image occurred earlier in 
+	simulation and the right image later.
+	</p>
+	<div>
+		<img src="images/task1pinned21.png" height="300" width="400"/>
+		<img src="images/task1pinned22.png" height="300" width="400"/>
+	</div>
+<p>Below, the wireframe can be seen with no shearing constraints (only structure and bending), just shearing constraints, and then
+	all three types of springs.
+</p>
+<div>
+	<img src="images/task1noshearing.png" height="300" width="400"/>
+	<img src="images/task1justshearing.png" height="300" width="400"/>
+	<img src="images/task1allsprings.png" height="300" width="400"/>
+  </div>
+
+<h2 id="task-2-supersampling-algorithm">Part 2 - Simulation via Numerical Integration</h2>
+<p>In this task, we used the spring force equations derived from the cloth structure as well as the 
+	Verlet integration method to simulate the evolution of the cloth over time. Because our simulation is 
+	flexible, we were able to see the result of changing various values. 
+	 </p>
+
+	 <p>Spring constant: a higher spring constant could be seen to make the model very rigid, 
+		 whereas a low spring constant led to the model jiggling around wildly. Below: default ks versus 
+		 default / 1000, causing noticeable shimmering in the structure of the cloth.
+	 </p>
+
+	 <div>
+		<img src="images/task2default.png" height="450" width="600"/>
+		<img src="images/task2lowks.png" height="450" width="600"/>
+	  </div>
+
+	 <p>Density: the density of the material affects the result of all other forces, so a very high density 
+		 leads to more pronounced spring forces and dramatic effects of gravity. A low density, then, resulted in 
+		much less perceived force on the cloth. Below: default density and density 1000 times the default, 
+	causing continuous motion due to much higher force.</p>
+
+	<div>
+		<img src="images/task2default.png" height="450" width="600"/>
+		<img src="images/task2highdensity.png" height="450" width="600"/>
+	  </div>
+
+	<p>Damping: damping affects how much forces diminish over time, so with a very low damping, the cloth
+		continues moving drastically for a long time, but a high damping causes the cloth to come to rest quickly. 
+	Below: default damping of 20% versus damping of 0%, causing the cloth to swing backward quickly.</p>
+
+	<div>
+		<img src="images/task2default.png" height="450" width="600"/>
+		<img src="images/task2lowdamping.png" height="450" width="600"/>
+	  </div>
+
+	<p>Below is the resting state of the cloth given the default parameters.</p>
+
+	<div>
+		<img src="images/task2restingpos1.png" height="450" width="600"/>
+		<img src="images/task2restingpos2.png" height="450" width="600"/>
+	  </div>
+
+
+<h2 id="task-3-transforms">Part 3 - Handling Collisions with Other Objects</h2>
+<p>In this task, we created methods to handle colliding the cloth and its constituent springs with 
+	spherical and planar objects.
+</p>
+
+<p> Below, we collided our cloth with sphere using spring coefficients of ks = 500, 5,000, and 50,000. 
+	Noticeably, the higher spring coefficients cause the material to rest farther from just due to the effects of 
+	gravity, with ks = 50,000 resulting in pronounced angles in between the edges of the cloth and the sphere.
+
+</p>
+<div>
+	<img src="images/task3finalrestingks500.png" height="300" width="400"/>
+	<img src="images/task3finalrestingks5000.png" height="300" width="400"/>
+	<img src="images/task3finalrestingks50000.png" height="300" width="400"/>
+  </div>
+
+	<p>Below is our cloth colliding with a plane from above, textured with a picnic table and 
+		checkerboard texture.
+	</p>
+<div>
+	<img src="images/task3plane1.png" height="300" width="400"/>
+	<img src="images/task3plane2.png" height="300" width="400"/>
+</div>
+
+<p>Below is our cloth colliding with a sphere from above, textured with a picnic table texture and an image of 
+	Sam's partner, Catherine, holding a baguette.
+</p>
+
+<div>
+	<img src="images/task3sphere1.png" height="300" width="400"/>
+	<img src="images/task3sphere2.png" height="300" width="400"/>
+</div>
+
+<h2 id="task-4-barycentric-coordinates">Task 4 - Handling Self Collisions</h2>
+<p>In this task, we implemented logic so that the cloth wouldn't collide with itself ("clipping"), but would
+	instead realistically fold on itself in response to forces. Below are six screenshots of the cloth falling (with 
+	normal shading). The cloth first begins to fold at the bottom, then as it has almost entirely hit the ground, 
+it starts to really fold over itself, ending up completely folded in half. </p>
+
+	<div>
+		<img src="images/task4fall1.png" height="300" width="400"/>
+		<img src="images/task4fall2.png" height="300" width="400"/>
+		<img src="images/task4fall3.png" height="300" width="400"/>
+	  </div>
+
+	  <div>
+		<img src="images/task4fall4.png" height="300" width="400"/>
+		<img src="images/task4fall5.png" height="300" width="400"/>
+		<img src="images/task4fall6.png" height="300" width="400"/>
+	  </div>
+
+	  <p>Density: as before, higher density caused a stronger force on the cloth, resulting 
+		  in bounciness, whereas low density caused the cloth to come to a stop earlier. Below: 
+		  regular density vs. 100x density, causing the cloth on the right to fall faster.
+	  </p>
+
+	  <div>
+		<img src="images/task4density1.png" height="300" width="400"/>
+		<img src="images/task4density2.png" height="300" width="400"/>
+	  </div>
+
+	  <p>Spring constant: a high spring constant led to very rigid movement (structural and other constraint springs 
+		  not bending as far in response to the same force), whereas very low spring constant led to the cloth bouncing around wildly. 
+		  Below, the left shows a cloth with ks = 1/1000 times the default, and the right shows a cloth with ks = 1000 times 
+		  the default.
+	  </p>
+
+	  <div>
+		<img src="images/task4spring1.png" height="300" width="400"/>
+		<img src="images/task4spring2.png" height="300" width="400"/>
+	  </div>
+
+<h2 id="task-5-texture-mapping">Task 5 - Shaders</h2>
+<p>In this task, we used GLSL to implement a variety of methods of shading objects. For this, we used .vert and .frag files. 
+	.vert files allowed us to generalize and parallelize operations over all vertices, and then the outputs
+	of these .vert files were used as inputs to .frag files, which used the values relevant to each vertex 
+	and a given procedure to calculate the color at that point.
+</p>
+
+<p>One of the main shaders, Blinn-Phong, is a clever combination of three kinds of lighting: diffuse, ambient, and specular 
+	that approximates real world reflection, global illumination, and shine effectively. Below, the sphere and cloth are shown 
+	with just the ambient component, just the diffuse component, just the specular component, and then the whole Blinn-Phong model.
+</p>
+
+<div>
+	<img src="images/task5blinn1.png" height="300" width="400"/>
+	<img src="images/task5blinn2.png" height="300" width="400"/>
+  </div>	
+  <div>
+	<img src="images/task5blinn3.png" height="300" width="400"/>
+	<img src="images/task5blinn4.png" height="300" width="400"/>
+  </div>
+
+<p>Another shader type we introduced was the ability to map shaders onto our objects, 
+	so below is Sam's partner Catherine holding a baguette mapped onto a falling cloth and a photo of 
+	Yosemite mapped onto another cloth.
+</p>	
+
+<div>
+	<img src="images/task5texture1.png" height="300" width="400"/>
+	<img src="images/task5texture2.png" height="300" width="400"/>
+  </div>
+
+  <p> Below, we showcase our bump shading (exterior changes) and displacement shading (physical changes to the 
+	  points on the materials) using texture_3, which looks like bricks. 
+	Both textures have noticeable shading features due to the layout of the bricks, but the 
+displacement shading seems much more 3 dimensional, with the mortar between the bricks being visible. </p>
+
+	  <div>
+		<img src="images/task5sphere1.png" height="300" width="400"/>
+		<img src="images/task5sphere2.png" height="300" width="400"/>
+	  </div>
+
+	  <p>
+	   Below, we use the same shaders but change the sphere's coarseness. On the top left is less coarse 
+	sphere with displacement shading, and on the top right with a more coarse sphere. The bottom row are the same for bump 
+shading. Noticeably, for displacement shading, the more coarse sphere has smoother geometry to land on, where for the bump shading, this 
+difference is purely cosmetic.</p>
+
+<div>
+	<img src="images/task5displacement16.png" height="300" width="400"/>
+	<img src="images/task5displacement128.png" height="300" width="400"/>
+  </div>
+
+<div>
+	<img src="images/task5bump16.png" height="300" width="400"/>
+	<img src="images/task5bump128.png" height="300" width="400"/>
+  </div>
+
+
+	<p>Finally, below is the sphere shown with an environnment mapping 
+		that mirrors a lovely cube texture.</p>
+
+	<div>
+		<img src="images/task5environ1.png" height="300" width="400"/>
+		<img src="images/task5environ2.png" height="300" width="400"/>
+	  </div>
+
+
+
+<h2 id="retrospective-and-thoughts">Retrospective and Takeaways</h2>
+<p>Using physics simulation has been really rewarding - all of the key graphical knowledge that 
+	we've built up so far (rasterization, meshes, shading, and collision) are able to come together
+	in order to produce realistic progression through time. We will continue this kind of simulation for our final project.
+</p>
+
+<p><a href="https://cs184.eecs.berkeley.edu/sp22/docs/proj4-spec">Project Specs</a></p>
+<p><em>Hosted at https://cal-cs184-student.github.io/sp22-project-webpages-nimarez/proj4/index</em></p>
+</body>
